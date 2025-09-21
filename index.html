@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerPath AI - Your Personalized Career Guidance Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #7209b7;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --info: #4895ef;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7ff;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: var(--success);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--success);
+        }
+        
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(rgba(67, 97, 238, 0.9), rgba(58, 12, 163, 0.9)), url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80') no-repeat center center/cover;
+            color: white;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background: var(--warning);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .section-title p {
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .features {
+            background-color: white;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .feature-card p {
+            color: #666;
+        }
+        
+        .chat-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            margin-top: 40px;
+        }
+        
+        .chat-box {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .message {
+            padding: 12px 18px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .bot-message {
+            background: var(--primary);
+            color: white;
+            border-top-left-radius: 5px;
+            align-self: flex-start;
+        }
+        
+        .user-message {
+            background: var(--accent);
+            color: white;
+            border-top-right-radius: 5px;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 50px;
+            outline: none;
+            font-size: 1rem;
+        }
+        
+        .roadmap-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            margin-top: 40px;
+        }
+        
+        .roadmap {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            position: relative;
+            margin: 40px 0;
+        }
+        
+        .roadmap::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 30px;
+            width: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+        
+        .roadmap-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            position: relative;
+        }
+        
+        .roadmap-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            z-index: 2;
+            flex-shrink: 0;
+        }
+        
+        .roadmap-content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            flex: 1;
+        }
+        
+        .roadmap-content h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .skill {
+            background: var(--info);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .profile-form {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            margin-top: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--success);
+        }
+        
+        .footer-section p {
+            margin-bottom: 15px;
+        }
+        
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background: var(--success);
+            transform: translateY(-5px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #444;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    CareerPath AI
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#chatbot">AI Chatbot</a></li>
+                    <li><a href="#roadmap">Roadmap</a></li>
+                    <li><a href="#profile">Profile</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Discover Your Perfect Career Path</h1>
+            <p>AI-powered career guidance platform that helps students identify their strengths, explore career options, and create personalized learning roadmaps.</p>
+            <a href="#chatbot" class="btn">Get Started</a>
+        </div>
+    </section>
+
+    <section id="features" class="section features">
+        <div class="container">
+            <div class="section-title">
+                <h2>How CareerPath AI Helps You</h2>
+                <p>Our platform combines multiple AI technologies to provide comprehensive career guidance</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>AI-Powered Chatbot</h3>
+                    <p>Interactive conversation to understand your interests, aptitudes, and hobbies to suggest tailored career paths.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-road"></i>
+                    </div>
+                    <h3>Skill Mapping & Roadmaps</h3>
+                    <p>Visual representation of your skills and personalized learning path to achieve your career goals.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Job Market Analysis</h3>
+                    <p>Real-time insights on emerging job roles, in-demand skills, and salary trends in the Indian market.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h3>Project Recommendations</h3>
+                    <p>Get suggestions for practical projects to build your portfolio and gain real-world experience.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <h3>Multimodal Evaluation</h3>
+                    <p>Share videos, images, or voice samples for more nuanced career recommendations.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3>Personalized Profile</h3>
+                    <p>Create a comprehensive profile that helps AI understand your academic and extracurricular strengths.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="chatbot" class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>AI Career Advisor</h2>
+                <p>Chat with our AI to discover career paths that match your interests and skills</p>
+            </div>
+            <div class="chat-container">
+                <div class="chat-box" id="chatBox">
+                    <div class="message bot-message">
+                        Hi there! I'm CareerPath AI. Let's discover your ideal career path. What are your main interests or hobbies?
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="userInput" placeholder="Type your message here...">
+                    <button class="btn" id="sendBtn">Send</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="roadmap" class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Your Career Roadmap</h2>
+                <p>Personalized learning path based on your skills and career goals</p>
+            </div>
+            <div class="roadmap-container">
+                <div class="roadmap">
+                    <div class="roadmap-item">
+                        <div class="roadmap-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="roadmap-content">
+                            <h3>Foundation Skills</h3>
+                            <p>Build a strong foundation with these essential skills</p>
+                            <div class="skills-container">
+                                <span class="skill">Communication</span>
+                                <span class="skill">Problem Solving</span>
+                                <span class="skill">Critical Thinking</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="roadmap-item">
+                        <div class="roadmap-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="roadmap-content">
+                            <h3>Technical Skills</h3>
+                            <p>Develop technical expertise in your chosen field</p>
+                            <div class="skills-container">
+                                <span class="skill">Python</span>
+                                <span class="skill">Data Analysis</span>
+                                <span class="skill">Machine Learning</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="roadmap-item">
+                        <div class="roadmap-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="roadmap-content">
+                            <h3>Professional Development</h3>
+                            <p>Prepare for the job market and advance your career</p>
+                            <div class="skills-container">
+                                <span class="skill">Resume Building</span>
+                                <span class="skill">Interview Preparation</span>
+                                <span class="skill">Networking</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="profile" class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Create Your Profile</h2>
+                <p>Build a comprehensive profile to get personalized career recommendations</p>
+            </div>
+            <div class="profile-form">
+                <form id="userProfileForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" placeholder="Enter your full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label for="education">Education Level</label>
+                            <select id="education">
+                                <option value="">Select your education level</option>
+                                <option value="highschool">High School</option>
+                                <option value="undergraduate">Undergraduate</option>
+                                <option value="graduate">Graduate</option>
+                                <option value="postgraduate">Postgraduate</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="field">Field of Study</label>
+                            <input type="text" id="field" placeholder="e.g. Computer Science, Business, Arts">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="skills">Your Skills</label>
+                        <input type="text" id="skills" placeholder="List your skills separated by commas">
+                    </div>
+                    <div class="form-group">
+                        <label for="interests">Career Interests</label>
+                        <textarea id="interests" rows="3" placeholder="Describe your career interests and goals"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="projects">Projects/Experiences</label>
+                        <textarea id="projects" rows="3" placeholder="Describe any projects or work experiences you have"></textarea>
+                    </div>
+                    <button type="submit" class="btn">Save Profile & Generate Recommendations</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CareerPath AI</h3>
+                    <p>AI-powered career guidance platform helping students discover their perfect career paths.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <p><a href="#features">Features</a></p>
+                    <p><a href="#chatbot">AI Chatbot</a></p>
+                    <p><a href="#roadmap">Roadmap</a></p>
+                    <p><a href="#profile">Profile</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-envelope"></i> info@careerpathai.com</p>
+                    <p><i class="fas fa-phone"></i> +91 9876543210</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 CareerPath AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Chatbot functionality
+        const chatBox = document.getElementById('chatBox');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        
+        // Sample career recommendations based on interests
+        const careerRecommendations = {
+            technology: [
+                { 
+                    name: "Software Development", 
+                    skills: ["Programming", "Problem Solving", "Algorithms"],
+                    explanation: "Create applications and systems that power devices and networks."
+                },
+                { 
+                    name: "Data Science", 
+                    skills: ["Statistics", "Python", "Machine Learning"],
+                    explanation: "Extract insights from complex data to drive decision making."
+                }
+            ],
+            arts: [
+                { 
+                    name: "Graphic Design", 
+                    skills: ["Creativity", "Adobe Suite", "Typography"],
+                    explanation: "Create visual concepts to communicate ideas that inspire and inform."
+                },
+                { 
+                    name: "Content Writing", 
+                    skills: ["Writing", "Research", "SEO"],
+                    explanation: "Create written material for websites, marketing, and publications."
+                }
+            ],
+            business: [
+                { 
+                    name: "Digital Marketing", 
+                    skills: ["SEO", "Social Media", "Analytics"],
+                    explanation: "Promote brands and products through digital channels."
+                },
+                { 
+                    name: "Business Analysis", 
+                    skills: ["Analysis", "Problem Solving", "Communication"],
+                    explanation: "Identify business needs and determine solutions to business problems."
+                }
+            ]
+        };
+        
+        function addMessage(message, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
+            messageDiv.textContent = message;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        
+        function handleUserInput() {
+            const message = userInput.value.trim();
+            if (message === '') return;
+            
+            addMessage(message, true);
+            userInput.value = '';
+            
+            // Simulate AI response with a delay
+            setTimeout(() => {
+                let response = "";
+                
+                if (message.toLowerCase().includes('technology') || message.toLowerCase().includes('tech')) {
+                    response = "Based on your interest in technology, I recommend these career paths:";
+                    addMessage(response);
+                    
+                    // Add career recommendations
+                    setTimeout(() => {
+                        careerRecommendations.technology.forEach(career => {
+                            const careerMsg = `🏆 ${career.name}: ${career.explanation}. Key skills: ${career.skills.join(', ')}.`;
+                            addMessage(careerMsg);
+                        });
+                    }, 800);
+                } 
+                else if (message.toLowerCase().includes('art') || message.toLowerCase().includes('design')) {
+                    response = "Based on your interest in arts and design, I recommend these career paths:";
+                    addMessage(response);
+                    
+                    // Add career recommendations
+                    setTimeout(() => {
+                        careerRecommendations.arts.forEach(career => {
+                            const careerMsg = `🎨 ${career.name}: ${career.explanation}. Key skills: ${career.skills.join(', ')}.`;
+                            addMessage(careerMsg);
+                        });
+                    }, 800);
+                }
+                else if (message.toLowerCase().includes('business') || message.toLowerCase().includes('marketing')) {
+                    response = "Based on your interest in business, I recommend these career paths:";
+                    addMessage(response);
+                    
+                    // Add career recommendations
+                    setTimeout(() => {
+                        careerRecommendations.business.forEach(career => {
+                            const careerMsg = `💼 ${career.name}: ${career.explanation}. Key skills: ${career.skills.join(', ')}.`;
+                            addMessage(careerMsg);
+                        });
+                    }, 800);
+                }
+                else {
+                    response = "That's interesting! Tell me more about what you enjoy doing. For example, are you interested in technology, arts, business, or something else?";
+                    addMessage(response);
+                }
+            }, 1000);
+        }
+        
+        sendBtn.addEventListener('click', handleUserInput);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleUserInput();
+            }
+        });
+        
+        // Form submission
+        document.getElementById('userProfileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Profile saved successfully! Generating your personalized recommendations...');
+            // In a real application, this would send data to a backend for processing
+        });
+        
+        // Initialize the page with some content
+        window.onload = function() {
+            // Add initial messages to the chat
+            setTimeout(() => {
+                addMessage("I can help you explore career options based on your interests. What fields are you most curious about?");
+            }, 1500);
+        };
+    </script>
+</body>
+</html>
